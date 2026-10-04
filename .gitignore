@@ -123,3 +123,7 @@ app.*.symbols
 # Flutter application dependencies and local IDE files
 !/pubspec.lock
 *.iml
+
+# macOS
+.DS_Store
+**/.DS_Store
