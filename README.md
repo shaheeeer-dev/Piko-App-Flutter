@@ -8,10 +8,9 @@ lib/
 ├── customer/
 │   │
 │   ├── splash/
-│   │   ├── brand_screen.dart
-│   │   ├── splash_screen.dart
-│   │   └── onboarding_screen.dart
-│   │
+│   │   ├── onboarding_s1.dart
+│   │   └── onboarding_s2.dart
+│   │ 
 │   ├── auth/
 │   │   ├── login_screen.dart
 │   │   ├── signup_screen.dart

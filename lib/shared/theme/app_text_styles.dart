@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 
 class AppTextStyles {
@@ -8,7 +9,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 36,
     fontWeight: FontWeight.w700,
-    color: AppColors.ivory,
+    color: AppColors.forest,
   );
 
   static const TextStyle subheadline = TextStyle(
@@ -59,5 +60,37 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: Color(0xFFBED0BC),
     letterSpacing: 2,
+  );
+
+  static const TextStyle screenTitle = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 32,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+    height: 1.1,
+    letterSpacing: -1,
+  );
+
+  static const TextStyle body = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: AppColors.ink,
+    height: 1.4,
+  );
+
+  static const TextStyle linkText = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+  );
+
+  static const TextStyle logoText = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+    letterSpacing: -1,
   );
 }

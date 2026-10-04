@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'customer/splash/brand_screen.dart';
+
+import 'customer/splash/onboarding_s1.dart';
 
 class PikoApp extends StatelessWidget {
   const PikoApp({super.key});
@@ -9,7 +10,7 @@ class PikoApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Piko',
-      home: const BrandScreen(),
+      home: const OnboardingS1(),
     );
   }
 }
