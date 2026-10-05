@@ -2,9 +2,9 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ shaheer, malaeka, stagging, production ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ shaheer, malaeka, stagging, production ]
   workflow_dispatch:
 
 concurrency:
