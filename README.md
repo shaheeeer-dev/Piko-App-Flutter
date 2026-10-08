@@ -68,6 +68,7 @@ lib/
 │
 ├── shared/
 │   ├── widgets/
+│   │   ├── piko_bottom_navigation.dart
 │   │   ├── piko_button.dart
 │   │   ├── piko_text_field.dart
 │   │   ├── piko_app_bar.dart
