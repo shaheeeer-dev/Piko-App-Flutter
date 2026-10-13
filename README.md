@@ -97,14 +97,50 @@ lib/
 │       └── api_constants.dart
 │
 │
-├── merchant/
-│   ├── auth/
-│   ├── onboarding/
-│   ├── dashboard/
-│   ├── orders/
-│   ├── menu/
-│   ├── analytics/
-│   └── settings/
+├── ├── merchant/                     # MALAEKA
+│   │   │
+│   │   ├── splash/
+│   │   │   └── merchant_welcome_screen.dart
+│   │   │
+│   │   ├── auth/
+│   │   │   ├── merchant_login_screen.dart
+│   │   │   └── merchant_signup_screen.dart
+│   │   │
+│   │   ├── onboarding/
+│   │   │   ├── business_setup_screen.dart
+│   │   │   └── business_details_screen.dart
+│   │   │
+│   │   ├── dashboard/
+│   │   │   └── merchant_dashboard_screen.dart
+│   │   │
+│   │   ├── orders/
+│   │   │   ├── merchant_orders_screen.dart
+│   │   │   ├── merchant_order_details_screen.dart
+│   │   │   └── order_queue_screen.dart
+│   │   │
+│   │   ├── menu/
+│   │   │   ├── menu_management_screen.dart
+│   │   │   ├── add_product_screen.dart
+│   │   │   ├── edit_product_screen.dart
+│   │   │   └── category_management_screen.dart
+│   │   │
+│   │   ├── pickup/
+│   │   │   ├── pickup_management_screen.dart
+│   │   │   └── pickup_settings_screen.dart
+│   │   │
+│   │   ├── analytics/
+│   │   │   └── merchant_analytics_screen.dart
+│   │   │
+│   │   ├── profile/
+│   │   │   ├── merchant_profile_screen.dart
+│   │   │   ├── business_settings_screen.dart
+│   │   │   └── merchant_settings_screen.dart
+│   │   │
+│   │   └── widgets/
+│   │       ├── order_card.dart
+│   │       ├── dashboard_stat_card.dart
+│   │       ├── merchant_product_card.dart
+│   │       └── merchant_bottom_nav.dart
 │
 │
 └── routes/
