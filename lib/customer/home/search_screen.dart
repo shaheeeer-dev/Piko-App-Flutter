@@ -22,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

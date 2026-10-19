@@ -28,6 +28,7 @@ class _MenuScreenState extends State<MenuScreen> {
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

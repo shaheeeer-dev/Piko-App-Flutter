@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piko/customer/auth/forgot_password_screen.dart';
 import 'package:piko/customer/auth/signup_screen.dart';
 import 'package:piko/customer/auth/widgets/auth_text_field.dart';
 import 'package:piko/customer/auth/widgets/social_login_button.dart';
@@ -167,7 +168,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    // Navigate to forgot password screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPasswordScreen(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'Forgot password?',
@@ -187,7 +193,12 @@ class _LoginScreenState extends State<LoginScreen> {
               PrimaryButton(
                 text: 'Log in',
                 onPressed: () {
-                  // Handle login
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
                 },
               ),
 
@@ -222,6 +233,11 @@ class _LoginScreenState extends State<LoginScreen> {
               // Continue with Apple Button
               SocialLoginButton(
                 text: 'Continue with Apple',
+                icon: const Icon(
+                  Icons.apple,
+                  size: 22,
+                  color: AppColors.forest,
+                ),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,

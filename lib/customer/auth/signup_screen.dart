@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piko/customer/auth/login_screen.dart';
 import 'package:piko/customer/auth/widgets/auth_text_field.dart';
 import 'package:piko/customer/home/home_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
@@ -188,6 +189,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       onTap: () {
                         if (Navigator.canPop(context)) {
                           Navigator.pop(context);
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
                         }
                       },
                       child: const Text(

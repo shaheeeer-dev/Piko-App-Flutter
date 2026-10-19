@@ -32,7 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: IndexedStack(
                 index: _currentIndex,
                 children: [
-                  const _HomeContent(),
+                  _HomeContent(
+                    onExplore: () => setState(() => _currentIndex = 1),
+                  ),
                   SearchScreen(onBack: () => setState(() => _currentIndex = 0)),
                 ],
               ),
@@ -63,11 +65,13 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _HomeContent extends StatelessWidget {
-  const _HomeContent();
+  final VoidCallback? onExplore;
+  const _HomeContent({this.onExplore});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,9 +153,12 @@ class _HomeContent extends StatelessWidget {
           const _CategoryRow(),
           const SizedBox(height: 21),
           OfferCard(
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Order ahead selected')),
-            ),
+            onTap: onExplore ??
+                () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const MenuScreen(),
+                      ),
+                    ),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -159,6 +166,7 @@ class _HomeContent extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               clipBehavior: Clip.none,
+              physics: const BouncingScrollPhysics(),
               children: [
                 RestaurantCard(
                   title: 'Mocca',
@@ -195,32 +203,40 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 16,
-            color: HomeScreen._muted,
-          ),
-        ),
-        const Expanded(
-          child: Center(
-            child: Text(
-              'Home',
-              style: TextStyle(
-                fontFamily: 'Inter',
+    final canPop = Navigator.canPop(context);
+    return SizedBox(
+      height: 26,
+      child: Row(
+        children: [
+          if (canPop)
+            IconButton(
+              onPressed: () => Navigator.of(context).maybePop(),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 16,
                 color: HomeScreen._muted,
-                fontSize: 11,
+              ),
+            )
+          else
+            const SizedBox(width: 16),
+          const Expanded(
+            child: Center(
+              child: Text(
+                'Home',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: HomeScreen._muted,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 20),
-      ],
+          const SizedBox(width: 16),
+        ],
+      ),
     );
   }
 }
