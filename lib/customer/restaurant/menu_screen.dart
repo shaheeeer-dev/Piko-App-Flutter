@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -17,8 +18,25 @@ class _MenuScreenState extends State<MenuScreen> {
   static const _muted = Color(0xFF748076);
   static const _line = Color(0xFFE1E5DB);
 
-  void _addItem() {
-    setState(() => _itemCount++);
+  Future<void> _openCustomize({
+    required String title,
+    required String description,
+    required int basePrice,
+    String heroSvg = 'assets/images/latte_hero.svg',
+  }) async {
+    final added = await Navigator.of(context).push<int>(
+      MaterialPageRoute(
+        builder: (_) => ItemDetailScreen(
+          title: title,
+          description: description,
+          basePrice: basePrice,
+          heroSvg: heroSvg,
+        ),
+      ),
+    );
+    if (added != null && added > 0 && mounted) {
+      setState(() => _itemCount += added);
+    }
   }
 
   @override
@@ -91,21 +109,59 @@ class _MenuScreenState extends State<MenuScreen> {
                 title: 'Honey oat latte',
                 description: 'Oat milk · a little sweetness',
                 price: 'Rs. 650',
-                onAdd: _addItem,
+                image: 'assets/images/latte_hero.svg',
+                onAdd: () => _openCustomize(
+                  title: 'Honey oat latte',
+                  description:
+                      'Espresso, creamy oat milk, and a touch of honey.',
+                  basePrice: 650,
+                  heroSvg: 'assets/images/latte_hero.svg',
+                ),
+                onTap: () => _openCustomize(
+                  title: 'Honey oat latte',
+                  description:
+                      'Espresso, creamy oat milk, and a touch of honey.',
+                  basePrice: 650,
+                  heroSvg: 'assets/images/latte_hero.svg',
+                ),
               ),
               const _Divider(),
               _MenuItem(
                 title: 'Butter croissant',
                 description: 'Flaky, golden, baked this morning',
                 price: 'Rs. 420',
-                onAdd: _addItem,
+                onAdd: () => _openCustomize(
+                  title: 'Butter croissant',
+                  description: 'Flaky, golden, baked fresh this morning.',
+                  basePrice: 420,
+                  heroSvg: 'assets/images/menu.svg',
+                ),
+                onTap: () => _openCustomize(
+                  title: 'Butter croissant',
+                  description: 'Flaky, golden, baked fresh this morning.',
+                  basePrice: 420,
+                  heroSvg: 'assets/images/menu.svg',
+                ),
               ),
               const _Divider(),
               _MenuItem(
                 title: 'Iced latte',
                 description: 'Smooth, cold, and made to order',
                 price: 'Rs. 580',
-                onAdd: _addItem,
+                onAdd: () => _openCustomize(
+                  title: 'Iced latte',
+                  description:
+                      'Smooth, cold espresso with fresh milk over ice.',
+                  basePrice: 580,
+                  heroSvg: 'assets/images/latte_hero.svg',
+                ),
+                onTap: () => _openCustomize(
+                  title: 'Iced latte',
+                  description:
+                      'Smooth, cold espresso with fresh milk over ice.',
+                  basePrice: 580,
+                  heroSvg: 'assets/images/latte_hero.svg',
+                ),
               ),
             ],
           ),
@@ -290,30 +346,37 @@ class _MenuItem extends StatelessWidget {
     required this.description,
     required this.price,
     required this.onAdd,
+    this.onTap,
+    this.image = 'assets/images/menu.svg',
   });
 
   final String title;
   final String description;
   final String price;
   final VoidCallback onAdd;
+  final VoidCallback? onTap;
+  final String image;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 103,
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(23),
-            child: SizedBox(
-              width: 96,
-              height: 103,
-              child: SvgPicture.asset(
-                'assets/images/menu.svg',
-                fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: onTap ?? onAdd,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        height: 103,
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(23),
+              child: SizedBox(
+                width: 96,
+                height: 103,
+                child: SvgPicture.asset(
+                  image,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
           const SizedBox(width: 15),
           Expanded(
             child: Column(
@@ -369,8 +432,9 @@ class _MenuItem extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _Divider extends StatelessWidget {
