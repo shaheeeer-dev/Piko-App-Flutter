@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:piko/customer/restaurant/menu_screen.dart';
+import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -67,8 +67,14 @@ class _SearchScreenState extends State<SearchScreen> {
           if (_query.isEmpty || 'june coffee'.contains(_query.toLowerCase()))
             _SearchVenueCard(
               title: 'June Coffee',
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => const MenuScreen())),
+              image: 'assets/images/cafe_hero.svg',
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const RestaurantDetailScreen(
+                    restaurantName: 'June Coffee',
+                  ),
+                ),
+              ),
             ),
           if (_query.isEmpty || 'mocca'.contains(_query.toLowerCase())) ...[
             const SizedBox(height: 16),
@@ -76,7 +82,12 @@ class _SearchScreenState extends State<SearchScreen> {
               title: 'Mocca',
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => const MenuScreen(restaurantName: 'Mocca'),
+                  builder: (_) => const RestaurantDetailScreen(
+                    restaurantName: 'Mocca',
+                    tagline: 'Artisanal coffee and fine European pastries.',
+                    address: 'Mall 1, Main Boulevard, Gulberg, Lahore',
+                    readyTime: '10–15 minutes',
+                  ),
                 ),
               ),
             ),
@@ -266,10 +277,15 @@ class _FilterChip extends StatelessWidget {
 }
 
 class _SearchVenueCard extends StatelessWidget {
-  const _SearchVenueCard({required this.title, required this.onTap});
+  const _SearchVenueCard({
+    required this.title,
+    required this.onTap,
+    this.image = 'assets/images/menu.svg',
+  });
 
   final String title;
   final VoidCallback onTap;
+  final String image;
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +306,7 @@ class _SearchVenueCard extends StatelessWidget {
               height: 138,
               width: double.infinity,
               child: SvgPicture.asset(
-                'assets/images/menu.svg',
+                image,
                 fit: BoxFit.cover,
               ),
             ),

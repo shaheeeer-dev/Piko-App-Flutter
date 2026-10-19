@@ -4,6 +4,7 @@ import 'package:piko/customer/auth/login_screen.dart';
 import 'package:piko/customer/auth/signup_screen.dart';
 import 'package:piko/customer/home/home_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
+import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
 import 'package:piko/customer/splash/onboarding_s1.dart';
 
 class AppRoutes {
@@ -12,6 +13,7 @@ class AppRoutes {
   static const String signup = '/signup';
   static const String forgotPassword = '/forgot-password';
   static const String home = '/home';
+  static const String restaurantDetail = '/restaurant-detail';
   static const String menu = '/menu';
 
   static Map<String, WidgetBuilder> get routes => {
@@ -20,6 +22,7 @@ class AppRoutes {
         signup: (context) => const SignupScreen(),
         forgotPassword: (context) => const ForgotPasswordScreen(),
         home: (context) => const HomeScreen(),
+        restaurantDetail: (context) => const RestaurantDetailScreen(),
         menu: (context) => const MenuScreen(),
       };
 }

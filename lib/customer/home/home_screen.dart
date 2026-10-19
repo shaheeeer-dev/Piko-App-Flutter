@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
+import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
 import 'package:piko/customer/home/widgets/category_chip.dart';
 import 'package:piko/customer/home/widgets/offer_card.dart';
 import 'package:piko/customer/home/widgets/restaurant_card.dart';
@@ -175,7 +176,12 @@ class _HomeContent extends StatelessWidget {
                   rating: '4.9',
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => const MenuScreen(restaurantName: 'Mocca'),
+                      builder: (_) => const RestaurantDetailScreen(
+                        restaurantName: 'Mocca',
+                        tagline: 'Artisanal coffee and fine European pastries.',
+                        address: 'Mall 1, Main Boulevard, Gulberg, Lahore',
+                        readyTime: '10–15 minutes',
+                      ),
                     ),
                   ),
                 ),
@@ -183,11 +189,15 @@ class _HomeContent extends StatelessWidget {
                 RestaurantCard(
                   title: 'June Coffee',
                   subtitle: 'Coffee & bakery · 8 min walk',
-                  image: 'assets/images/menu.svg',
+                  image: 'assets/images/cafe_hero.svg',
                   rating: '4.8',
-                  onTap: () => Navigator.of(
-                    context,
-                  ).push(MaterialPageRoute(builder: (_) => const MenuScreen())),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const RestaurantDetailScreen(
+                        restaurantName: 'June Coffee',
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
