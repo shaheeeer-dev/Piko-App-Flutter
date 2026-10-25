@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piko/shared/services/favorite_cafes.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
 import 'package:piko/customer/home/widgets/category_chip.dart';
 import 'package:piko/customer/home/widgets/offer_card.dart';
@@ -77,7 +78,7 @@ class _HomeContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _TopBar(),
-          const SizedBox(height: 43),
+          const SizedBox(height: 18),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,52 +154,52 @@ class _HomeContent extends StatelessWidget {
           const _CategoryRow(),
           const SizedBox(height: 21),
           OfferCard(
-            onTap: onExplore ??
+            onTap:
+                onExplore ??
                 () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const RestaurantDetailScreen(
-                          restaurantName: 'June Coffee',
-                        ),
-                      ),
-                    ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 300,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              clipBehavior: Clip.none,
-              physics: const BouncingScrollPhysics(),
-              children: [
-                RestaurantCard(
-                  title: 'Mocca',
-                  subtitle: 'Coffee & bakery · 6 min walk',
-                  image: 'assets/images/menu.svg',
-                  rating: '4.9',
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const RestaurantDetailScreen(
-                        restaurantName: 'Mocca',
-                        tagline: 'Artisanal coffee and fine European pastries.',
-                        address: 'Mall 1, Main Boulevard, Gulberg, Lahore',
-                        readyTime: '10–15 minutes',
-                      ),
+                  MaterialPageRoute(
+                    builder: (_) => const RestaurantDetailScreen(
+                      restaurantName: 'June Coffee',
                     ),
                   ),
                 ),
-                const SizedBox(width: 18),
-                RestaurantCard(
-                  title: 'June Coffee',
-                  subtitle: 'Coffee & bakery · 8 min walk',
-                  image: 'assets/images/cafe_hero.svg',
-                  rating: '4.8',
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const RestaurantDetailScreen(
-                        restaurantName: 'June Coffee',
+          ),
+          const SizedBox(height: 24),
+          ValueListenableBuilder<Set<String>>(
+            valueListenable: FavoriteCafes.names,
+            builder: (context, favorites, _) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _SectionHeading('Favorites'),
+                const SizedBox(height: 12),
+                if (favorites.isEmpty)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.line),
+                    ),
+                    child: const Text(
+                      'Your favorite cafés, all together. Tap the bookmark on a café to save it here.',
+                      style: TextStyle(
+                        color: HomeScreen._muted,
+                        fontSize: 13,
+                        height: 1.5,
                       ),
                     ),
-                  ),
+                  )
+                else
+                  _CafeList(names: favorites.toList()),
+                const SizedBox(height: 28),
+                const _SectionHeading('Explore more'),
+                const SizedBox(height: 12),
+                _CafeList(
+                  names: [
+                    'Mocca',
+                    'June Coffee',
+                  ].where((name) => !favorites.contains(name)).toList(),
                 ),
               ],
             ),
@@ -214,39 +215,19 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final canPop = Navigator.canPop(context);
-    return SizedBox(
-      height: 26,
-      child: Row(
-        children: [
-          if (canPop)
-            IconButton(
-              onPressed: () => Navigator.of(context).maybePop(),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              icon: const Icon(
-                Icons.arrow_back_ios_new_rounded,
-                size: 16,
-                color: HomeScreen._muted,
-              ),
-            )
-          else
-            const SizedBox(width: 16),
-          const Expanded(
-            child: Center(
-              child: Text(
-                'Home',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  color: HomeScreen._muted,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+    return const SizedBox(
+      height: 28,
+      width: double.infinity,
+      child: Center(
+        child: Text(
+          'Home',
+          style: TextStyle(
+            fontFamily: 'Inter',
+            color: HomeScreen._muted,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
           ),
-          const SizedBox(width: 16),
-        ],
+        ),
       ),
     );
   }
@@ -277,6 +258,70 @@ class _CategoryRowState extends State<_CategoryRow> {
             onTap: () => setState(() => _selectedIndex = entry.key),
           );
         }).toList(),
+      ),
+    );
+  }
+}
+
+class _SectionHeading extends StatelessWidget {
+  const _SectionHeading(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Text(
+    text,
+    style: const TextStyle(
+      color: AppColors.ink,
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.5,
+    ),
+  );
+}
+
+class _CafeList extends StatelessWidget {
+  const _CafeList({required this.names});
+  final List<String> names;
+
+  @override
+  Widget build(BuildContext context) {
+    if (names.isEmpty) {
+      return const Text(
+        'You’ve saved all the nearby cafés. More places coming soon.',
+        style: TextStyle(color: HomeScreen._muted, fontSize: 13, height: 1.5),
+      );
+    }
+    return SizedBox(
+      height: 300,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: names.length,
+        separatorBuilder: (_, index) => const SizedBox(width: 18),
+        itemBuilder: (context, index) {
+          final name = names[index];
+          final isMocca = name == 'Mocca';
+          return RestaurantCard(
+            title: name,
+            subtitle: 'Coffee & bakery · ${isMocca ? 6 : 8} min walk',
+            image: isMocca
+                ? 'assets/images/menu.svg'
+                : 'assets/images/cafe_hero.svg',
+            rating: isMocca ? '4.9' : '4.8',
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => isMocca
+                    ? const RestaurantDetailScreen(
+                        restaurantName: 'Mocca',
+                        tagline: 'Artisanal coffee and fine European pastries.',
+                        address: 'Mall 1, Main Boulevard, Gulberg, Lahore',
+                        readyTime: '10–15 minutes',
+                      )
+                    : RestaurantDetailScreen(restaurantName: name),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

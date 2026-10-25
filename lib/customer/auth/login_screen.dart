@@ -193,11 +193,10 @@ class _LoginScreenState extends State<LoginScreen> {
               PrimaryButton(
                 text: 'Log in',
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
                   );
                 },
               ),
@@ -239,11 +238,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: AppColors.forest,
                 ),
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
                   );
                 },
               ),

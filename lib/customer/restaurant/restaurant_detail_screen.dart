@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piko/shared/services/favorite_cafes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
@@ -28,8 +29,7 @@ class RestaurantDetailScreen extends StatefulWidget {
     this.address = '24 Main Boulevard, Gulberg, Lahore',
     this.readyTime = '10–15 minutes',
     this.openHours = 'Open until 8 PM',
-    this.description =
-        'Specialty coffee, warm pastries, and a slower start to your day. Freshly made, just around the corner.',
+    this.description = 'Specialty coffee, warm pastries, and a slower start to your day. Freshly made, just around the corner.',
     this.heroSvg = 'assets/images/cafe_hero.svg',
   });
 
@@ -38,7 +38,7 @@ class RestaurantDetailScreen extends StatefulWidget {
 }
 
 class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
-  bool _isFavorite = false;
+  bool get _isFavorite => FavoriteCafes.contains(widget.restaurantName);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,10 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
 
               // Open Status Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 13,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.chipBg,
                   borderRadius: BorderRadius.circular(16),
@@ -220,9 +223,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MenuScreen(
-                    restaurantName: widget.restaurantName,
-                  ),
+                  builder: (context) =>
+                      MenuScreen(restaurantName: widget.restaurantName),
                 ),
               );
             },
@@ -263,7 +265,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           IconButton(
             onPressed: () {
               setState(() {
-                _isFavorite = !_isFavorite;
+                FavoriteCafes.toggle(widget.restaurantName);
               });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

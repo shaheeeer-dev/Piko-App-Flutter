@@ -160,11 +160,10 @@ class _SignupScreenState extends State<SignupScreen> {
               PrimaryButton(
                 text: 'Create account',
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
                   );
                 },
               ),
