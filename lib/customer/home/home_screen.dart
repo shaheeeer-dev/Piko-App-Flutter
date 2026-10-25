@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:piko/customer/restaurant/menu_screen.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
 import 'package:piko/customer/home/widgets/category_chip.dart';
 import 'package:piko/customer/home/widgets/offer_card.dart';
@@ -157,7 +156,9 @@ class _HomeContent extends StatelessWidget {
             onTap: onExplore ??
                 () => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => const MenuScreen(),
+                        builder: (_) => const RestaurantDetailScreen(
+                          restaurantName: 'June Coffee',
+                        ),
                       ),
                     ),
           ),
