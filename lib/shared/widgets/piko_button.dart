@@ -37,12 +37,15 @@ class PrimaryButton extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               )
-            : Stack(
-                alignment: Alignment.center,
+            : Row(
                 children: [
-                  Center(
+                  // Equal side slots keep the label centered without letting
+                  // alignment widgets expand the bottom bar vertically.
+                  const SizedBox(width: 48),
+                  Expanded(
                     child: Text(
                       text,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
@@ -50,13 +53,7 @@ class PrimaryButton extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: trailing!,
-                    ),
-                  ),
+                  SizedBox(width: 48, child: trailing!),
                 ],
               ),
       ),
