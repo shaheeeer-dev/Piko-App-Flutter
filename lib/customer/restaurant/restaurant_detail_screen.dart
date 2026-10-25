@@ -175,7 +175,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
 
               const SizedBox(height: 24),
 
-              // Made with care story section
+              // Story section
               const Text(
                 'Made with a little care',
                 style: TextStyle(
@@ -200,21 +200,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                 ),
               ),
 
-              const SizedBox(height: 18),
-
-              // Highlight chips
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: const [
-                  _HighlightChip(label: 'Specialty Coffee'),
-                  _HighlightChip(label: 'Fresh Bakery'),
-                  _HighlightChip(label: 'Quick Pickup'),
-                  _HighlightChip(label: 'Outdoor Vibe'),
-                ],
-              ),
-
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
             ],
           ),
         ),
@@ -222,7 +208,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
       bottomNavigationBar: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(28, 8, 28, 14),
+          padding: const EdgeInsets.fromLTRB(28, 8, 28, 16),
           child: PrimaryButton(
             text: 'Explore the menu',
             trailing: const Icon(
@@ -318,6 +304,15 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
       child: SvgPicture.asset(
         widget.heroSvg,
         fit: BoxFit.cover,
+        placeholderBuilder: (context) => Container(
+          color: const Color(0xFFE8DFD0),
+          alignment: Alignment.center,
+          child: const Icon(
+            Icons.coffee_rounded,
+            size: 48,
+            color: AppColors.forest,
+          ),
+        ),
       ),
     );
   }
@@ -432,32 +427,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _HighlightChip extends StatelessWidget {
-  final String label;
-  const _HighlightChip({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.line),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontFamily: 'Inter',
-          color: AppColors.muted,
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-        ),
       ),
     );
   }

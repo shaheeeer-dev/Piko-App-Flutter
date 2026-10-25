@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piko/customer/cart/cart_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 
@@ -124,112 +125,6 @@ class _MenuScreenState extends State<MenuScreen> {
         _cartTotal += item.price * added;
       });
     }
-  }
-
-  void _showCartSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-        decoration: const BoxDecoration(
-          color: AppColors.ivory,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFDCD8CF),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Your cart · $_itemCount items',
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.ink,
-                  ),
-                ),
-                Text(
-                  'Rs. $_cartTotal',
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.forest,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            const Text(
-              'June Coffee • Gulberg, Lahore',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 13,
-                color: _muted,
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Proceeding to pickup schedule...'),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.forest,
-                  foregroundColor: AppColors.ivory,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(26),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Choose pickup time',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(width: 6),
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      color: AppColors.lime,
-                      size: 18,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -372,7 +267,15 @@ class _MenuScreenState extends State<MenuScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(28, 8, 28, 14),
           child: GestureDetector(
-            onTap: _showCartSheet,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => CartScreen(
+                    restaurantName: widget.restaurantName,
+                  ),
+                ),
+              );
+            },
             behavior: HitTestBehavior.opaque,
             child: Container(
               height: 56,

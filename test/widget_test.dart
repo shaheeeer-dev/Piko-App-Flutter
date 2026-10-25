@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:piko/app.dart';
+import 'package:piko/customer/cart/cart_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
@@ -64,5 +65,26 @@ void main() {
     expect(find.text('Coffee'), findsOneWidget);
     expect(find.text('Honey oat latte'), findsOneWidget);
     expect(find.text('View cart · 2 items'), findsOneWidget);
+  });
+
+  testWidgets('Cart screen loads with items, summary, and pickup time CTA', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: CartScreen(
+          restaurantName: 'June Coffee',
+          location: 'Gulberg',
+        ),
+      ),
+    );
+
+    expect(find.text('Your little pick-me-up'), findsOneWidget);
+    expect(find.text('June Coffee • Gulberg'), findsOneWidget);
+    expect(find.text('Honey oat latte'), findsOneWidget);
+    expect(find.text('Butter croissant'), findsOneWidget);
+    expect(find.text('Pickup only'), findsOneWidget);
+    expect(find.text('Choose pickup time'), findsOneWidget);
+    expect(find.text('Total'), findsOneWidget);
   });
 }
