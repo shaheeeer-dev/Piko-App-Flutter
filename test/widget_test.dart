@@ -5,6 +5,7 @@ import 'package:piko/app.dart';
 import 'package:piko/shared/widgets/piko_button.dart';
 import 'package:piko/shared/theme/app_theme.dart';
 import 'package:piko/customer/cart/cart_screen.dart';
+import 'package:piko/customer/checkout/pickup_time_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
@@ -128,5 +129,28 @@ void main() {
     expect(find.text('Pickup only'), findsOneWidget);
     expect(find.text('Choose pickup time'), findsOneWidget);
     expect(find.text('Total'), findsOneWidget);
+  });
+
+  testWidgets('Pickup time screen loads with ASAP option, time slots, and CTA', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PickupTimeScreen(
+          restaurantName: 'June Coffee',
+          openHours: 'Open until 8 PM',
+        ),
+      ),
+    );
+
+    expect(find.text('When works\nfor you?'), findsOneWidget);
+    expect(find.text('June Coffee • Open until 8 PM'), findsOneWidget);
+    expect(find.text('As soon as possible'), findsOneWidget);
+    expect(find.text('Or choose a time'), findsOneWidget);
+    expect(find.text('Today, Oct 3'), findsOneWidget);
+    expect(find.text('Tomorrow'), findsOneWidget);
+    expect(find.text('12:30 PM'), findsOneWidget);
+    expect(find.text('12:45 PM'), findsOneWidget);
+    expect(find.textContaining('Confirm •'), findsOneWidget);
   });
 }

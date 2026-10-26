@@ -3,6 +3,7 @@ import 'package:piko/customer/auth/forgot_password_screen.dart';
 import 'package:piko/customer/auth/login_screen.dart';
 import 'package:piko/customer/auth/signup_screen.dart';
 import 'package:piko/customer/cart/cart_screen.dart';
+import 'package:piko/customer/checkout/pickup_time_screen.dart';
 import 'package:piko/customer/home/home_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
@@ -19,6 +20,7 @@ class AppRoutes {
   static const String menu = '/menu';
   static const String itemDetail = '/item-detail';
   static const String cart = '/cart';
+  static const String pickupTime = '/pickup-time';
 
   static Map<String, WidgetBuilder> get routes => {
         onboarding: (context) => const OnboardingS1(),
@@ -30,5 +32,6 @@ class AppRoutes {
         menu: (context) => const MenuScreen(),
         itemDetail: (context) => const ItemDetailScreen(),
         cart: (context) => const CartScreen(),
+        pickupTime: (context) => const PickupTimeScreen(),
       };
 }
