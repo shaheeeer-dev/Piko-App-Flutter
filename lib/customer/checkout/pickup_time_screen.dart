@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piko/customer/checkout/checkout_screen.dart';
 import 'package:piko/customer/home/home_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 import 'package:piko/shared/widgets/piko_button.dart';
@@ -10,6 +11,7 @@ class PickupTimeScreen extends StatefulWidget {
   final int totalPrice;
   final VoidCallback? onConfirmed;
   final DateTime? currentDate;
+  final bool showConfirmationSheet;
 
   const PickupTimeScreen({
     super.key,
@@ -19,6 +21,7 @@ class PickupTimeScreen extends StatefulWidget {
     this.totalPrice = 1120,
     this.onConfirmed,
     this.currentDate,
+    this.showConfirmationSheet = false,
   });
 
   @override
@@ -186,7 +189,22 @@ class _PickupTimeScreenState extends State<PickupTimeScreen> {
       widget.onConfirmed!();
       return;
     }
-    _showOrderConfirmation(context);
+    if (widget.showConfirmationSheet) {
+      _showOrderConfirmation(context);
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutScreen(
+          restaurantName: widget.restaurantName,
+          restaurantLocation: 'Gulberg',
+          pickupTimeLabel: _selectedTimeLabel,
+          totalPrice: widget.totalPrice,
+          totalItems: widget.totalItems,
+        ),
+      ),
+    );
   }
 
   void _showOrderConfirmation(BuildContext context) {
