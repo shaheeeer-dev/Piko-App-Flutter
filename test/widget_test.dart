@@ -5,6 +5,8 @@ import 'package:piko/app.dart';
 import 'package:piko/shared/widgets/piko_button.dart';
 import 'package:piko/shared/theme/app_theme.dart';
 import 'package:piko/customer/cart/cart_screen.dart';
+import 'package:piko/customer/checkout/checkout_screen.dart';
+import 'package:piko/customer/checkout/order_success_screen.dart';
 import 'package:piko/customer/checkout/pickup_time_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
@@ -50,10 +52,7 @@ void main() {
         await tester.tap(button);
         await tester.pumpAndSettle();
         if (cart) {
-          expect(
-            find.textContaining('Proceeding to pickup time'),
-            findsOneWidget,
-          );
+          expect(find.byType(PickupTimeScreen), findsOneWidget);
         } else {
           expect(find.byType(MenuScreen), findsOneWidget);
         }
@@ -147,10 +146,140 @@ void main() {
     expect(find.text('June Coffee • Open until 8 PM'), findsOneWidget);
     expect(find.text('As soon as possible'), findsOneWidget);
     expect(find.text('Or choose a time'), findsOneWidget);
-    expect(find.text('Today, Oct 3'), findsOneWidget);
+    expect(find.textContaining('Today, '), findsOneWidget);
     expect(find.text('Tomorrow'), findsOneWidget);
     expect(find.text('12:30 PM'), findsOneWidget);
     expect(find.text('12:45 PM'), findsOneWidget);
     expect(find.textContaining('Confirm •'), findsOneWidget);
   });
+
+  testWidgets(
+    'Confirming pickup time shows order confirmation sheet and navigates home',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PickupTimeScreen(
+            restaurantName: 'June Coffee',
+            openHours: 'Open until 8 PM',
+            showConfirmationSheet: true,
+          ),
+        ),
+      );
+
+      final confirmButton = find.textContaining('Confirm •');
+      expect(confirmButton, findsOneWidget);
+      await tester.tap(confirmButton);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Order confirmed!'), findsOneWidget);
+      expect(find.text('Preparing'), findsOneWidget);
+      expect(find.text('Back to home'), findsOneWidget);
+
+      await tester.tap(find.text('Back to home'));
+      await tester.pumpAndSettle();
+      expect(find.byType(PickupTimeScreen), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Confirming pickup time navigates to Checkout & payment screen',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PickupTimeScreen(
+            restaurantName: 'June Coffee',
+            openHours: 'Open until 8 PM',
+          ),
+        ),
+      );
+
+      final confirmButton = find.textContaining('Confirm •');
+      expect(confirmButton, findsOneWidget);
+      await tester.tap(confirmButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CheckoutScreen), findsOneWidget);
+      expect(find.text('One last thing.'), findsOneWidget);
+      expect(
+        find.text("Check your details, then you're all set."),
+        findsOneWidget,
+      );
+      expect(find.text('Checkout & payment'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Checkout screen displays details, allows editing contact, and paying navigates to Order confirmed',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: CheckoutScreen(
+            restaurantName: 'June Coffee',
+            restaurantLocation: 'Gulberg',
+            pickupTimeLabel: 'Today • 12:30 PM',
+            subtotal: 1070,
+            serviceFee: 50,
+            totalPrice: 1120,
+          ),
+        ),
+      );
+
+      expect(find.text('One last thing.'), findsOneWidget);
+      expect(find.text('Today • 12:30 PM'), findsOneWidget);
+      expect(find.text('June Coffee, Gulberg'), findsOneWidget);
+      expect(find.text('Ayesha Khan'), findsOneWidget);
+      expect(find.text('+92 300 123 4567'), findsOneWidget);
+      expect(find.text('Edit'), findsOneWidget);
+      expect(find.text('Payment method'), findsOneWidget);
+      expect(find.text('Visa ending in 4242'), findsOneWidget);
+      expect(find.text('Pay at pickup'), findsOneWidget);
+      expect(find.text('Add a card'), findsOneWidget);
+      expect(find.text('Subtotal'), findsOneWidget);
+      expect(find.text('Service fee'), findsOneWidget);
+      expect(find.text('Pay Rs. 1,120'), findsOneWidget);
+
+      // Tap Pay and settle future delay
+      await tester.tap(find.text('Pay Rs. 1,120'));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('Processing...'), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(milliseconds: 500));
+
+      // Navigated to OrderSuccessScreen (C14)
+      expect(find.byType(OrderSuccessScreen), findsOneWidget);
+      expect(find.text("You're on the list."), findsOneWidget);
+      expect(find.text('Track my order'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Adding customized item in menu screen updates live cart bar and transfers to cart',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: MenuScreen(restaurantName: 'June Coffee'),
+        ),
+      );
+
+      expect(find.text('View cart · 2 items'), findsOneWidget);
+      expect(find.text('Rs. 1070'), findsOneWidget);
+
+      await tester.tap(find.text('Honey oat latte'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Large + Rs. 150'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Add'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('View cart · 3 items'), findsOneWidget);
+      expect(find.text('Rs. 1870'), findsOneWidget);
+
+      await tester.tap(find.text('View cart · 3 items'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CartScreen), findsOneWidget);
+      expect(find.text('Rs. 1,870'), findsOneWidget);
+    },
+  );
 }
