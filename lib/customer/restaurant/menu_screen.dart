@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:piko/customer/cart/cart_screen.dart';
+import 'package:piko/customer/cart/widgets/cart_item_tile.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 
@@ -33,8 +34,40 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   int _selectedCategoryIndex = 0;
-  int _itemCount = 2;
-  int _cartTotal = 1070;
+  late List<CartItemModel> _cartItems = [
+    CartItemModel(
+      id: 'honey_oat_latte',
+      title: 'Honey oat latte',
+      subtitle: 'Oat milk • a little sweetness',
+      unitPrice: 650,
+      quantity: 1,
+      thumbnail: SvgPicture.asset(
+        'assets/images/latte_hero.svg',
+        fit: BoxFit.cover,
+      ),
+    ),
+    CartItemModel(
+      id: 'butter_croissant',
+      title: 'Butter croissant',
+      subtitle: '1 item • Freshly baked',
+      unitPrice: 420,
+      quantity: 1,
+      thumbnail: Container(
+        color: const Color(0xFFF7EEDD),
+        alignment: Alignment.center,
+        child: const Icon(
+          Icons.bakery_dining_rounded,
+          color: Color(0xFF9F6934),
+          size: 26,
+        ),
+      ),
+    ),
+  ];
+
+  int get _itemCount =>
+      _cartItems.fold<int>(0, (sum, item) => sum + item.quantity);
+  int get _cartTotal =>
+      _cartItems.fold<int>(0, (sum, item) => sum + item.totalPrice);
 
   static const _muted = Color(0xFF748076);
   static const _line = Color(0xFFE1E5DB);
@@ -109,7 +142,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Future<void> _openCustomize(MenuItemData item) async {
-    final added = await Navigator.of(context).push<int>(
+    final result = await Navigator.of(context).push<dynamic>(
       MaterialPageRoute(
         builder: (_) => ItemDetailScreen(
           title: item.title,
@@ -119,10 +152,22 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       ),
     );
-    if (added != null && added > 0 && mounted) {
+    if (result != null && mounted) {
       setState(() {
-        _itemCount += added;
-        _cartTotal += item.price * added;
+        if (result is CustomizedItemResult) {
+          _cartItems.add(result.toCartItem());
+        } else if (result is int && result > 0) {
+          _cartItems.add(
+            CartItemModel(
+              id: '${item.title.toLowerCase().replaceAll(' ', '_')}_${DateTime.now().microsecondsSinceEpoch}',
+              title: item.title,
+              subtitle: item.description,
+              unitPrice: item.price,
+              quantity: result,
+              thumbnail: SvgPicture.asset(item.image, fit: BoxFit.cover),
+            ),
+          );
+        }
       });
     }
   }
@@ -267,14 +312,20 @@ class _MenuScreenState extends State<MenuScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(28, 8, 28, 14),
           child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
+            onTap: () async {
+              final updated = await Navigator.of(context).push<List<CartItemModel>>(
                 MaterialPageRoute(
                   builder: (_) => CartScreen(
                     restaurantName: widget.restaurantName,
+                    initialItems: _cartItems,
                   ),
                 ),
               );
+              if (updated != null && mounted) {
+                setState(() {
+                  _cartItems = updated;
+                });
+              }
             },
             behavior: HitTestBehavior.opaque,
             child: Container(
