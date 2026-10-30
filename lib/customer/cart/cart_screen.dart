@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:piko/customer/cart/widgets/cart_item_tile.dart';
 import 'package:piko/customer/cart/widgets/order_summary.dart';
+import 'package:piko/customer/checkout/pickup_time_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 import 'package:piko/shared/widgets/piko_button.dart';
 
@@ -91,12 +92,19 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.ivory,
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(28, 12, 28, 24),
-          child: Column(
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (!didPop) {
+            Navigator.of(context).pop(_items);
+          }
+        },
+        child: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(28, 12, 28, 24),
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Top Bar
@@ -156,7 +164,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       const SizedBox(height: 6),
                       TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () => Navigator.of(context).pop(_items),
                         child: const Text('Explore menu'),
                       ),
                     ],
@@ -183,7 +191,7 @@ class _CartScreenState extends State<CartScreen> {
                 // "+ Add something else" button
                 Center(
                   child: OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(context).pop(_items),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Color(0xFFDCE3D5), width: 1.2),
                       backgroundColor: Colors.white,
@@ -228,6 +236,7 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ),
       ),
+      ),
       bottomNavigationBar: SafeArea(
         top: false,
         child: Padding(
@@ -242,11 +251,13 @@ class _CartScreenState extends State<CartScreen> {
             onPressed: _items.isEmpty
                 ? () {}
                 : () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        duration: const Duration(seconds: 2),
-                        content: Text(
-                          'Proceeding to pickup time with $_totalItems items (Rs. ${_subtotal + _serviceFee})',
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PickupTimeScreen(
+                          restaurantName: widget.restaurantName,
+                          totalItems: _totalItems,
+                          totalPrice: _subtotal + _serviceFee,
                         ),
                       ),
                     );
@@ -263,7 +274,7 @@ class _CartScreenState extends State<CartScreen> {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(context).pop(_items),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
             icon: const Icon(

@@ -1,6 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piko/customer/cart/widgets/cart_item_tile.dart';
 import 'package:piko/shared/theme/app_colors.dart';
+
+class CustomizedItemResult {
+  final String title;
+  final String size;
+  final String milk;
+  final List<String> addons;
+  final String sweetness;
+  final String note;
+  final int unitPrice;
+  final int quantity;
+  final int totalPrice;
+  final String heroSvg;
+
+  const CustomizedItemResult({
+    required this.title,
+    required this.size,
+    required this.milk,
+    required this.addons,
+    required this.sweetness,
+    required this.note,
+    required this.unitPrice,
+    required this.quantity,
+    required this.totalPrice,
+    required this.heroSvg,
+  });
+
+  CartItemModel toCartItem() {
+    final details = <String>[];
+    if (size != 'Regular') details.add(size);
+    details.add(milk);
+    if (addons.isNotEmpty) details.addAll(addons);
+    if (!sweetness.toLowerCase().contains('standard')) details.add(sweetness);
+    if (note.isNotEmpty) details.add('Note: "$note"');
+
+    final subtitle = details.isNotEmpty
+        ? details.join(' • ')
+        : 'Standard customization';
+
+    return CartItemModel(
+      id: '${title.toLowerCase().replaceAll(' ', '_')}_${DateTime.now().microsecondsSinceEpoch}',
+      title: title,
+      subtitle: subtitle,
+      unitPrice: unitPrice,
+      quantity: quantity,
+      thumbnail: SvgPicture.asset(
+        heroSvg,
+        fit: BoxFit.cover,
+        placeholderBuilder: (_) => const Icon(
+          Icons.local_cafe_rounded,
+          color: AppColors.forest,
+          size: 24,
+        ),
+      ),
+    );
+  }
+}
 
 class ItemDetailScreen extends StatefulWidget {
   final String title;
@@ -73,6 +130,19 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   int get _totalPrice => _unitPrice * _quantity;
 
   void _onAddToCart() {
+    final result = CustomizedItemResult(
+      title: widget.title,
+      size: _sizes[_selectedSizeIndex]['name'] as String,
+      milk: _milks[_selectedMilkIndex]['name'] as String,
+      addons: _selectedAddons.map((i) => _addons[i]['name'] as String).toList(),
+      sweetness: _sweetnessLevels[_sweetnessIndex],
+      note: _noteController.text.trim(),
+      unitPrice: _unitPrice,
+      quantity: _quantity,
+      totalPrice: _totalPrice,
+      heroSvg: widget.heroSvg,
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -81,7 +151,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         duration: const Duration(seconds: 2),
       ),
     );
-    Navigator.of(context).pop(_quantity);
+    Navigator.of(context).pop(result);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piko/customer/home/home_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 import 'package:piko/shared/widgets/piko_button.dart';
 
@@ -7,6 +8,8 @@ class PickupTimeScreen extends StatefulWidget {
   final String openHours;
   final int totalItems;
   final int totalPrice;
+  final VoidCallback? onConfirmed;
+  final DateTime? currentDate;
 
   const PickupTimeScreen({
     super.key,
@@ -14,6 +17,8 @@ class PickupTimeScreen extends StatefulWidget {
     this.openHours = 'Open until 8 PM',
     this.totalItems = 2,
     this.totalPrice = 1120,
+    this.onConfirmed,
+    this.currentDate,
   });
 
   @override
@@ -26,7 +31,30 @@ class _PickupTimeScreenState extends State<PickupTimeScreen> {
   int _selectedDayIndex = 0; // 0: Today, 1: Tomorrow
   int _selectedSlotIndex = 0; // Index of the chosen time slot
 
-  final List<String> _days = ['Today, Oct 3', 'Tomorrow'];
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  late final List<String> _days;
+
+  @override
+  void initState() {
+    super.initState();
+    final date = widget.currentDate ?? DateTime.now();
+    final monthName = _months[date.month - 1];
+    _days = ['Today, $monthName ${date.day}', 'Tomorrow'];
+  }
 
   final List<String> _timeSlots = [
     '12:30 PM',
@@ -146,19 +174,207 @@ class _PickupTimeScreenState extends State<PickupTimeScreen> {
               color: AppColors.lime,
               size: 20,
             ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  duration: const Duration(seconds: 2),
-                  content: Text(
-                    'Pickup time confirmed: $_selectedTimeLabel for ${widget.restaurantName}',
-                  ),
-                ),
-              );
-            },
+            onPressed: _handleConfirm,
           ),
         ),
       ),
+    );
+  }
+
+  void _handleConfirm() {
+    if (widget.onConfirmed != null) {
+      widget.onConfirmed!();
+      return;
+    }
+    _showOrderConfirmation(context);
+  }
+
+  void _showOrderConfirmation(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.ivory,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.fromLTRB(28, 14, 28, 28),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(
+                    color: AppColors.line,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Container(
+                  width: 64,
+                  height: 64,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: AppColors.chipBg,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check_rounded,
+                    color: AppColors.forest,
+                    size: 34,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'Order confirmed!',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.ink,
+                    letterSpacing: -0.8,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Your order has been sent to ${widget.restaurantName}.',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    color: AppColors.subtext,
+                  ),
+                ),
+                const SizedBox(height: 22),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.line, width: 1.2),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.storefront_rounded,
+                                size: 18,
+                                color: AppColors.forest,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                widget.restaurantName,
+                                style: const TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.ink,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.chipBg,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              'Preparing',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.forest,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Divider(color: AppColors.line, height: 1),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Pickup time',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              color: AppColors.subtext,
+                            ),
+                          ),
+                          Text(
+                            _isAsap
+                                ? 'ASAP (~10–15 min)'
+                                : '${_days[_selectedDayIndex]} • $_selectedTimeLabel',
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Order total',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              color: AppColors.subtext,
+                            ),
+                          ),
+                          Text(
+                            '${widget.totalItems} items · Rs. ${widget.totalPrice}',
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                PrimaryButton(
+                  text: 'Back to home',
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (_) => const HomeScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
