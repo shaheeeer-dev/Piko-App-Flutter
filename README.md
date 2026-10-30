@@ -167,9 +167,9 @@ planned screens may not have an implementation yet.
 | C09 | Menu | `figma/Article-7.svg` | `lib/customer/restaurant/menu_screen.dart` |
 | C10 | Customize item | `figma/Article-8.svg` | `lib/customer/restaurant/item_detail_screen.dart` |
 | C11 | Cart | `figma/Article-9.svg` | `lib/customer/cart/cart_screen.dart` |
-| C12 | Pickup time | `figma/Article-10.svg` | `lib/customer/checkout/pickup_time_screen.dart` (planned) |
-| C13 | Checkout & payment | `figma/Article-11.svg` | `lib/customer/checkout/checkout_screen.dart` (planned) |
-| C14 | Order confirmed | `figma/Article-12.svg` | `lib/customer/checkout/order_success_screen.dart` (planned) |
+| C12 | Pickup time | `figma/Article-10.svg` | `lib/customer/checkout/pickup_time_screen.dart` |
+| C13 | Checkout & payment | `figma/Article-11.svg` | `lib/customer/checkout/checkout_screen.dart` |
+| C14 | Order confirmed | `figma/Article-12.svg` | `lib/customer/checkout/order_success_screen.dart` |
 | C15 | Live order status | `figma/Article-13.svg` | `lib/customer/orders/active_order_screen.dart` (planned) |
 | C16 | Ready for pickup | `figma/Article-14.svg` | `lib/customer/orders/pickup_code_screen.dart` (planned) |
 | C17 | Orders & history | `figma/Article-15.svg` | `lib/customer/orders/orders_screen.dart` (planned) |
