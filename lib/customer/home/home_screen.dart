@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piko/customer/orders/orders_screen.dart';
+import 'package:piko/customer/profile/profile_screen.dart';
 import 'package:piko/shared/services/favorite_cafes.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
 import 'package:piko/customer/home/widgets/category_chip.dart';
@@ -42,21 +43,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     onBack: () => setState(() => _currentIndex = 0),
                     showBackButton: false,
                   ),
+                  ProfileScreen(
+                    onBack: () => setState(() => _currentIndex = 0),
+                  ),
                 ],
               ),
             ),
             PikoBottomNavigation(
               currentIndex: _currentIndex,
               onItemSelected: (index) {
-                if (index == 0 || index == 1 || index == 2) {
-                  setState(() => _currentIndex = index);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Profile coming soon'),
-                    ),
-                  );
-                }
+                setState(() => _currentIndex = index);
               },
             ),
           ],

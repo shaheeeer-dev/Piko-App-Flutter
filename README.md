@@ -173,8 +173,8 @@ planned screens may not have an implementation yet.
 | C15 | Live order status | `figma/Article-13.svg` | `lib/customer/orders/active_order_screen.dart` |
 | C16 | Ready for pickup | `figma/Article-14.svg` | `lib/customer/orders/pickup_code_screen.dart` |
 | C17 | Orders & history | `figma/Article-15.svg` | `lib/customer/orders/orders_screen.dart` |
-| C18 | Favorites | `figma/Article-16.svg` | Not yet assigned in the folder plan |
-| C19 | Notifications | `figma/Article-17.svg` | `lib/customer/profile/notifications_screen.dart` (planned) |
-| C20 | Profile | `figma/Article-18.svg` | `lib/customer/profile/profile_screen.dart` (planned) |
-| C21 | Edit profile | `figma/Article-19.svg` | `lib/customer/profile/edit_profile_screen.dart` (planned) |
-| C22 | Settings | `figma/Article-20.svg` | `lib/customer/profile/settings_screen.dart` (planned) |
+| C18 | Favorites | `figma/Article-16.svg` | `lib/customer/home/favorites_screen.dart` |
+| C19 | Notifications | `figma/Article-17.svg` | `lib/customer/profile/notifications_screen.dart` |
+| C20 | Profile | `figma/Article-18.svg` | `lib/customer/profile/profile_screen.dart` |
+| C21 | Edit profile | `figma/Article-19.svg` | `lib/customer/profile/edit_profile_screen.dart` |
+| C22 | Settings | `figma/Article-20.svg` | `lib/customer/profile/settings_screen.dart` |
