@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piko/customer/orders/orders_screen.dart';
 import 'package:piko/shared/services/favorite_cafes.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
 import 'package:piko/customer/home/widgets/category_chip.dart';
@@ -37,22 +38,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     onExplore: () => setState(() => _currentIndex = 1),
                   ),
                   SearchScreen(onBack: () => setState(() => _currentIndex = 0)),
+                  OrdersScreen(
+                    onBack: () => setState(() => _currentIndex = 0),
+                    showBackButton: false,
+                  ),
                 ],
               ),
             ),
             PikoBottomNavigation(
               currentIndex: _currentIndex,
               onItemSelected: (index) {
-                if (index == 0 || index == 1) {
+                if (index == 0 || index == 1 || index == 2) {
                   setState(() => _currentIndex = index);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        index == 2
-                            ? 'Orders coming soon'
-                            : 'Profile coming soon',
-                      ),
+                    const SnackBar(
+                      content: Text('Profile coming soon'),
                     ),
                   );
                 }

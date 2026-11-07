@@ -8,6 +8,10 @@ import 'package:piko/customer/cart/cart_screen.dart';
 import 'package:piko/customer/checkout/checkout_screen.dart';
 import 'package:piko/customer/checkout/order_success_screen.dart';
 import 'package:piko/customer/checkout/pickup_time_screen.dart';
+import 'package:piko/customer/home/home_screen.dart';
+import 'package:piko/customer/orders/active_order_screen.dart';
+import 'package:piko/customer/orders/orders_screen.dart';
+import 'package:piko/customer/orders/pickup_code_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
@@ -280,6 +284,133 @@ void main() {
 
       expect(find.byType(CartScreen), findsOneWidget);
       expect(find.text('Rs. 1,870'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Active order screen loads with live stepper and navigates to pickup code',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: ActiveOrderScreen(
+            orderId: '1042',
+            restaurantName: 'June Coffee',
+            pickupTime: '12:30 PM',
+          ),
+        ),
+      );
+
+      expect(find.text('Live order status'), findsOneWidget);
+      expect(find.text('In progress'), findsOneWidget);
+      expect(find.text('Good things\nare brewing.'), findsOneWidget);
+      expect(find.text('Your pickup is scheduled for 12:30 PM.'), findsOneWidget);
+      expect(find.text('Order accepted'), findsOneWidget);
+      expect(find.text('Being prepared'), findsOneWidget);
+      expect(find.text('Ready for pickup'), findsOneWidget);
+      expect(find.text('June Coffee'), findsOneWidget);
+      expect(find.text('Contact café'), findsOneWidget);
+      expect(find.text('View pickup code'), findsOneWidget);
+
+      await tester.tap(find.text('View pickup code'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PickupCodeScreen), findsOneWidget);
+      expect(find.text('Ready to go'), findsOneWidget);
+      expect(find.text('1042'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Pickup code screen loads with pickup code box and directions CTA',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PickupCodeScreen(
+            orderId: '1042',
+            restaurantName: 'June Coffee',
+            restaurantLocation: '24 Main Boulevard',
+            pickupTime: '12:30 PM',
+          ),
+        ),
+      );
+
+      expect(find.text('Ready for pickup'), findsOneWidget);
+      expect(find.text('Ready to go'), findsOneWidget);
+      expect(find.text('Your happy moment\nis ready.'), findsOneWidget);
+      expect(find.text('YOUR PICKUP CODE'), findsOneWidget);
+      expect(find.text('1042'), findsOneWidget);
+      expect(find.text('Show this number to the team'), findsOneWidget);
+      expect(find.text('June Coffee • Gulberg'), findsOneWidget);
+      expect(find.text('Get directions'), findsOneWidget);
+      expect(find.text('View order'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Orders screen loads with tabs and switches filters',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: OrdersScreen(),
+        ),
+      );
+
+      expect(find.text('Orders'), findsOneWidget);
+      expect(find.text('All'), findsOneWidget);
+      expect(find.text('Active'), findsOneWidget);
+      expect(find.text('June Coffee'), findsWidgets);
+      expect(find.text('Preparing'), findsOneWidget);
+
+      // Filter by active
+      await tester.tap(find.text('Active'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Preparing'), findsOneWidget);
+      expect(find.text('Completed'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Order success screen Track my order button navigates to ActiveOrderScreen',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: OrderSuccessScreen(
+            orderId: '#1042',
+            restaurantName: 'June Coffee',
+            pickupTime: '12:30 PM',
+          ),
+        ),
+      );
+
+      final trackButton = find.text('Track my order');
+      expect(trackButton, findsOneWidget);
+
+      await tester.tap(trackButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ActiveOrderScreen), findsOneWidget);
+      expect(find.text('Good things\nare brewing.'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Home screen bottom navigation tab 2 navigates to OrdersScreen',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: const HomeScreen(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tap Orders in bottom nav
+      await tester.tap(find.text('Orders'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(OrdersScreen), findsOneWidget);
+      expect(find.text('Track ongoing pickups and view order history.'), findsOneWidget);
     },
   );
 }

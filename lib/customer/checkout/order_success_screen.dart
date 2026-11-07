@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piko/customer/home/home_screen.dart';
+import 'package:piko/customer/orders/active_order_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 import 'package:piko/shared/widgets/piko_button.dart';
 
@@ -141,10 +142,18 @@ class OrderSuccessScreen extends StatelessWidget {
               size: 20,
             ),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                (route) => false,
+                MaterialPageRoute(
+                  builder: (context) => ActiveOrderScreen(
+                    orderId: orderId.replaceAll('#', ''),
+                    restaurantName: restaurantName,
+                    restaurantLocation: restaurantLocation,
+                    pickupTime: pickupTime,
+                    totalPrice: totalPrice,
+                    items: items,
+                  ),
+                ),
               );
             },
           ),

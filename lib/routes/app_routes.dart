@@ -7,6 +7,9 @@ import 'package:piko/customer/checkout/checkout_screen.dart';
 import 'package:piko/customer/checkout/order_success_screen.dart';
 import 'package:piko/customer/checkout/pickup_time_screen.dart';
 import 'package:piko/customer/home/home_screen.dart';
+import 'package:piko/customer/orders/active_order_screen.dart';
+import 'package:piko/customer/orders/orders_screen.dart';
+import 'package:piko/customer/orders/pickup_code_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
@@ -25,6 +28,9 @@ class AppRoutes {
   static const String pickupTime = '/pickup-time';
   static const String checkout = '/checkout';
   static const String orderSuccess = '/order-success';
+  static const String activeOrder = '/active-order';
+  static const String pickupCode = '/pickup-code';
+  static const String orders = '/orders';
 
   static Map<String, WidgetBuilder> get routes => {
         onboarding: (context) => const OnboardingS1(),
@@ -39,5 +45,8 @@ class AppRoutes {
         pickupTime: (context) => const PickupTimeScreen(),
         checkout: (context) => const CheckoutScreen(),
         orderSuccess: (context) => const OrderSuccessScreen(),
+        activeOrder: (context) => const ActiveOrderScreen(),
+        pickupCode: (context) => const PickupCodeScreen(),
+        orders: (context) => const OrdersScreen(),
       };
 }
