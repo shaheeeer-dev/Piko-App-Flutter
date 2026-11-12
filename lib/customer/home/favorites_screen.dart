@@ -11,7 +11,6 @@ class FavoritesScreen extends StatefulWidget {
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
-
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final List<Map<String, dynamic>> _allCafes = [
     {
