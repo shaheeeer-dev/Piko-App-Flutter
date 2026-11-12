@@ -8,6 +8,15 @@ import 'package:piko/customer/cart/cart_screen.dart';
 import 'package:piko/customer/checkout/checkout_screen.dart';
 import 'package:piko/customer/checkout/order_success_screen.dart';
 import 'package:piko/customer/checkout/pickup_time_screen.dart';
+import 'package:piko/customer/home/favorites_screen.dart';
+import 'package:piko/customer/home/home_screen.dart';
+import 'package:piko/customer/orders/active_order_screen.dart';
+import 'package:piko/customer/orders/orders_screen.dart';
+import 'package:piko/customer/orders/pickup_code_screen.dart';
+import 'package:piko/customer/profile/edit_profile_screen.dart';
+import 'package:piko/customer/profile/notifications_screen.dart';
+import 'package:piko/customer/profile/profile_screen.dart';
+import 'package:piko/customer/profile/settings_screen.dart';
 import 'package:piko/customer/restaurant/item_detail_screen.dart';
 import 'package:piko/customer/restaurant/menu_screen.dart';
 import 'package:piko/customer/restaurant/restaurant_detail_screen.dart';
@@ -280,6 +289,245 @@ void main() {
 
       expect(find.byType(CartScreen), findsOneWidget);
       expect(find.text('Rs. 1,870'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Active order screen loads with live stepper and navigates to pickup code',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: ActiveOrderScreen(
+            orderId: '1042',
+            restaurantName: 'June Coffee',
+            pickupTime: '12:30 PM',
+          ),
+        ),
+      );
+
+      expect(find.text('Live order status'), findsOneWidget);
+      expect(find.text('In progress'), findsOneWidget);
+      expect(find.text('Good things\nare brewing.'), findsOneWidget);
+      expect(find.text('Your pickup is scheduled for 12:30 PM.'), findsOneWidget);
+      expect(find.text('Order accepted'), findsOneWidget);
+      expect(find.text('Being prepared'), findsOneWidget);
+      expect(find.text('Ready for pickup'), findsOneWidget);
+      expect(find.text('June Coffee'), findsOneWidget);
+      expect(find.text('Contact café'), findsOneWidget);
+      expect(find.text('View pickup code'), findsOneWidget);
+
+      await tester.tap(find.text('View pickup code'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PickupCodeScreen), findsOneWidget);
+      expect(find.text('Ready to go'), findsOneWidget);
+      expect(find.text('1042'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Pickup code screen loads with pickup code box and directions CTA',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PickupCodeScreen(
+            orderId: '1042',
+            restaurantName: 'June Coffee',
+            restaurantLocation: '24 Main Boulevard',
+            pickupTime: '12:30 PM',
+          ),
+        ),
+      );
+
+      expect(find.text('Ready for pickup'), findsOneWidget);
+      expect(find.text('Ready to go'), findsOneWidget);
+      expect(find.text('Your happy moment\nis ready.'), findsOneWidget);
+      expect(find.text('YOUR PICKUP CODE'), findsOneWidget);
+      expect(find.text('1042'), findsOneWidget);
+      expect(find.text('Show this number to the team'), findsOneWidget);
+      expect(find.text('June Coffee • Gulberg'), findsOneWidget);
+      expect(find.text('Get directions'), findsOneWidget);
+      expect(find.text('View order'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Orders screen loads with tabs and switches filters',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: OrdersScreen(),
+        ),
+      );
+
+      expect(find.text('Orders'), findsOneWidget);
+      expect(find.text('All'), findsOneWidget);
+      expect(find.text('Active'), findsOneWidget);
+      expect(find.text('June Coffee'), findsWidgets);
+      expect(find.text('Preparing'), findsOneWidget);
+
+      // Filter by active
+      await tester.tap(find.text('Active'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Preparing'), findsOneWidget);
+      expect(find.text('Completed'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Order success screen Track my order button navigates to ActiveOrderScreen',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: OrderSuccessScreen(
+            orderId: '#1042',
+            restaurantName: 'June Coffee',
+            pickupTime: '12:30 PM',
+          ),
+        ),
+      );
+
+      final trackButton = find.text('Track my order');
+      expect(trackButton, findsOneWidget);
+
+      await tester.tap(trackButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ActiveOrderScreen), findsOneWidget);
+      expect(find.text('Good things\nare brewing.'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Home screen bottom navigation tab 2 navigates to OrdersScreen',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: const HomeScreen(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tap Orders in bottom nav
+      await tester.tap(find.text('Orders'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(OrdersScreen), findsOneWidget);
+      expect(find.text('Track ongoing pickups and view order history.'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Favorites screen loads with saved cafes and allows toggling bookmark',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: FavoritesScreen(),
+        ),
+      );
+
+      expect(find.text('Favorites'), findsOneWidget);
+      expect(find.text('The good list.'), findsOneWidget);
+      expect(find.text('Your saved places, all together.'), findsOneWidget);
+      expect(find.text('June Coffee'), findsOneWidget);
+      expect(find.text('Daily Knead'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Notifications screen loads with order updates and earlier receipts',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: NotificationsScreen(),
+        ),
+      );
+
+      expect(find.text('Notifications'), findsOneWidget);
+      expect(find.text('A little heads-up'), findsOneWidget);
+      expect(find.text('Your order is ready!'), findsOneWidget);
+      expect(find.text('Your coffee is in good hands'), findsOneWidget);
+      expect(find.text('Earlier'), findsOneWidget);
+      expect(find.text('Thanks for stopping by'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Profile screen loads with user info, menu links, and tagline card',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: ProfileScreen(),
+        ),
+      );
+
+      expect(find.text('Profile'), findsOneWidget);
+      expect(find.text('Ayesha Khan'), findsOneWidget);
+      expect(find.text('ayesha@example.com'), findsOneWidget);
+      expect(find.text('Edit'), findsOneWidget);
+      expect(find.text('My favorites'), findsOneWidget);
+      expect(find.text('Payment methods'), findsOneWidget);
+      expect(find.text('Notifications'), findsOneWidget);
+      expect(find.text('Settings & support'), findsOneWidget);
+      expect(find.text('A LITTLE EVERYDAY JOY'), findsOneWidget);
+      expect(find.text('See you at\nyour next pickup.'), findsOneWidget);
+
+      // Tap Edit
+      await tester.tap(find.text('Edit'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EditProfileScreen), findsOneWidget);
+      expect(find.text('Make yourself\nat home.'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Settings screen loads with switches and opens logout dialog',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: SettingsScreen(),
+        ),
+      );
+
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Just how you like it.'), findsOneWidget);
+      expect(find.text('Order updates'), findsOneWidget);
+      expect(find.text('News & offers'), findsOneWidget);
+      expect(find.text('Help & support'), findsOneWidget);
+      expect(find.text('Privacy policy'), findsOneWidget);
+      expect(find.text('Terms of service'), findsOneWidget);
+      expect(find.text('About Piko'), findsOneWidget);
+      expect(find.text('Log out'), findsOneWidget);
+
+      // Tap Log out
+      await tester.tap(find.text('Log out'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Are you sure you want to log out of your Piko account?'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Home screen bottom navigation tab 3 navigates to ProfileScreen',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: const HomeScreen(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tap Profile in bottom nav
+      await tester.tap(find.text('Profile'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProfileScreen), findsOneWidget);
+      expect(find.text('Ayesha Khan'), findsOneWidget);
+      expect(find.text('My favorites'), findsOneWidget);
     },
   );
 }
