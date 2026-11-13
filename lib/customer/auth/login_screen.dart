@@ -5,6 +5,7 @@ import 'package:piko/customer/auth/signup_screen.dart';
 import 'package:piko/customer/auth/widgets/auth_text_field.dart';
 import 'package:piko/customer/auth/widgets/social_login_button.dart';
 import 'package:piko/customer/home/home_screen.dart';
+import 'package:piko/merchant/auth/merchant_login_screen.dart';
 import 'package:piko/shared/theme/app_colors.dart';
 import 'package:piko/shared/widgets/piko_button.dart';
 
@@ -229,23 +230,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 24),
 
-              // Continue with Apple Button
+              // Continue as Merchant Button
               SocialLoginButton(
-                text: 'Continue with Apple',
+                text: 'Continue as Merchant',
                 icon: const Icon(
-                  Icons.apple,
+                  Icons.storefront_outlined,
                   size: 22,
                   color: AppColors.forest,
                 ),
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    (route) => false,
+                    MaterialPageRoute(
+                      builder: (context) => const MerchantLoginScreen(),
+                    ),
                   );
                 },
               ),
-
               const SizedBox(height: 20),
 
               // New to Piko? Create an account
