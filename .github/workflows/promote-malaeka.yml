@@ -1,0 +1,56 @@
+name: Promote Malaeka changes
+
+on:
+  push:
+    branches: [malaeka]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: malaeka-promotion
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge into stagging and production, then sync developers
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+
+          git switch --detach origin/stagging
+          git merge --no-edit origin/malaeka
+          git branch release-stagging HEAD
+
+          git switch --detach origin/production
+          git merge --no-edit release-stagging
+          git branch release-production HEAD
+
+          if ! git diff --quiet release-stagging release-production; then
+            echo "::error::Production has changes missing from stagging. Merge them into stagging before retrying."
+            exit 1
+          fi
+
+          for branch in malaeka ali shaheer; do
+            git switch --detach "origin/$branch"
+            if ! git merge --ff-only release-production; then
+              echo "::error::$branch has commits outside this release. Integrate them into stagging before retrying."
+              exit 1
+            fi
+            git branch "release-$branch" HEAD
+          done
+
+          git push --atomic origin \
+            release-stagging:refs/heads/stagging \
+            release-production:refs/heads/production \
+            release-malaeka:refs/heads/malaeka \
+            release-ali:refs/heads/ali \
+            release-shaheer:refs/heads/shaheer
