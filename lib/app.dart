@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'customer/splash/onboarding_s1.dart';
+import 'merchant/splash/merchant_welcome_screen.dart';
 import 'routes/app_routes.dart';
 import 'shared/theme/app_theme.dart';
 
@@ -13,7 +13,7 @@ class PikoApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Piko',
       theme: AppTheme.lightTheme,
-      home: const OnboardingS1(),
+      home: const MerchantWelcomeScreen(),
       routes: AppRoutes.routes,
     );
   }
